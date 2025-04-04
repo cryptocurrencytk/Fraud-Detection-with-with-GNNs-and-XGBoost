@@ -1,4 +1,4 @@
-#Fraud Detection with Graph Neural Networks (GNN) and XGBoost
+# Fraud Detection with Graph Neural Networks (GNN) and XGBoost
 
 The approach used for fraud detection in this project integrates both **Graph Neural Networks (GNN)** and **XGBoost**, leveraging the power of graph-based embeddings and traditional machine learning models to deal with imbalanced data effectively. Below is a detailed breakdown of the methodology:
 
@@ -86,20 +86,28 @@ The embeddings were merged with the fraud labels and used to train **XGBoost**, 
 
 ---
 
-## **7. Model Evaluation**
+## **7. Model Results**
 
-The performance of the model was evaluated using several metrics:
+The training process involved 100 epochs for the GNN, with the loss and model evaluation metrics detailed below.
 
-- **Accuracy:** Measures the proportion of correct predictions (both fraudulent and non-fraudulent transactions).
-  
-- **Classification Report:** Provides precision, recall, and F1-score for both classes (fraud and non-fraud).
-  
-- **AUC-ROC Curve:** The **Area Under the Receiver Operating Characteristic Curve (AUC)** was used to evaluate the model’s ability to distinguish between fraudulent and non-fraudulent transactions.
+### **Training Loss**
+
+The model's loss decreased steadily over the training epochs, showing significant improvement in each step:
+
+Epoch 0  | Loss: 4.390958786010742
+Epoch 10 | Loss: 0.04509425535798073
+Epoch 20 | Loss: 0.02158733829855919
+Epoch 30 | Loss: 0.0201947670429945
+Epoch 40 | Loss: 0.014409753493964672
+Epoch 50 | Loss: 0.007788381539285183
+Epoch 60 | Loss: 0.0068520172499120235
+Epoch 70 | Loss: 0.005124170798808336
+Epoch 80 | Loss: 0.0041487934067845345
+Epoch 90 | Loss: 0.003285979153588414
 
 ### **Best Hyperparameters**
 
 The best parameters for XGBoost were identified as:
-
 Best parameters: {‘learning_rate’: 0.1, ‘max_depth’: 3, ‘scale_pos_weight’: 10}
 
 These parameters optimized the model's ability to handle the class imbalance and make accurate predictions.
@@ -113,7 +121,6 @@ The model achieved the following evaluation results:
 #### **Classification Report**
 
 The classification report shows the precision, recall, and F1-score for both the fraudulent and legitimate transactions:
-
            precision    recall  f1-score   support
        0       1.00      0.93      0.96      3990
        1       0.01      0.67      0.01         3
@@ -154,7 +161,28 @@ This AUC value indicates excellent performance in distinguishing between fraudul
 
 ---
 
-## **3. Conclusion**
+## **8. Weaknesses of the Model**
+
+While the model performs well overall, there are several areas where it could be improved:
+
+### **Class Imbalance**
+Despite using **SMOTE** and **ADASYN** to address class imbalance, the model's performance for the fraudulent class (class `1`) remains suboptimal. The **precision** for fraud detection is very low (0.01), and the **F1-score** is poor. This indicates that the model struggles to generalize for the minority class, even after adjusting the decision threshold.
+
+### **Model's Precision for Fraudulent Transactions**
+The **precision** for fraud detection is very low, indicating that the model is not very reliable when it predicts fraud. This means that while the model identifies a few frauds, it also generates a high number of false positives. This is particularly concerning in real-world applications where false positives could lead to unnecessary checks or investigations.
+
+### **Limited Representation of Fraudulent Transactions**
+The dataset is heavily imbalanced, with very few instances of fraudulent transactions compared to legitimate ones. This imbalance leads to a model that is highly biased toward predicting the majority class (non-fraud). The **recall** for fraud is **67%**, which is decent, but the model still misses a significant proportion of fraudulent transactions.
+
+### **Feature Engineering**
+The model uses basic features (such as amounts and temporal features) for graph node embeddings. However, these may not fully capture the complex relationships between transactions, users, and merchants. More sophisticated feature engineering techniques could improve performance, especially for identifying fraud patterns.
+
+### **Potential Overfitting**
+The model's high accuracy could be indicative of overfitting, particularly given the imbalance of the classes. The model performs well on the training set but may struggle with generalization to new, unseen data. Cross-validation and further regularization techniques could be used to mitigate this.
+
+---
+
+## **9. Conclusion**
 
 This fraud detection model successfully integrates **Graph Neural Networks (GNN)** for feature learning with **XGBoost** for classification. Key findings include:
 
@@ -162,4 +190,23 @@ This fraud detection model successfully integrates **Graph Neural Networks (GNN)
 - **XGBoost** was able to classify fraudulent transactions effectively, leveraging the powerful features extracted by the GNN and dealing with the class imbalance problem.
 - The model achieved **high AUC** (0.97) and **adjusted accuracy** (86.5%), which are excellent for fraud detection tasks with imbalanced data.
 
-This approach demonstrates the power of combining deep learning and traditional machine learning to solve complex problems like fraud detection.
+However, the model faces challenges with class imbalance, leading to low precision for fraud detection. The performance could be further improved by incorporating more advanced techniques for handling imbalanced datasets, improving feature engineering, and tuning the model to reduce false positives.
+
+This approach demonstrates the power of combining deep learning and traditional machine learning to solve complex problems like fraud detection, but it also highlights the importance of addressing the limitations of class imbalance and model generalization in real-world scenarios.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
